@@ -8,7 +8,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:5173',              // keep local dev working
-    'https://my-shop-murex-omega.vercel.app/',   // your real deployed frontend
+    'https://my-shop-buron-ltd.vercel.app',   // your real deployed frontend
   ],
 }));
 app.use(express.json());

@@ -5,7 +5,12 @@ require('dotenv').config();
 const app = express();
 
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',              // keep local dev working
+    'https://my-shop-murex-omega.vercel.app/',   // your real deployed frontend
+  ],
+}));
 app.use(express.json());
 
 app.use((req, res, next) => {

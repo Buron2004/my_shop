@@ -63,17 +63,17 @@ function PromoCarousel({ products }) {
 
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-4xl font-light z-20"
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/20 hover:bg-black/35 text-white flex items-center justify-center z-20 transition"
         aria-label="Previous"
       >
-        ‹
+        <span className="text-7xl font-light leading-none -translate-x-px">‹</span>
       </button>
       <button
         onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-4xl font-light z-20"
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/20 hover:bg-black/35 text-white flex items-center justify-center z-20 transition"
         aria-label="Next"
       >
-        ›
+        <span className="text-7xl font-light leading-none translate-x-px">›</span>
       </button>
 
       <div className="absolute bottom-6 left-6 flex gap-1.5 z-20">

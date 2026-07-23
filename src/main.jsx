@@ -1,60 +1,4 @@
-/*import React from "react";
-import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./App";
-import CheckoutForm from "./components/CheckoutForm";
-import { CartProvider } from "./context/CartContext";  // NEW import
-import "./index.css";   // ADD THIS
-
-
-const router = createBrowserRouter([
-  { path: "/", element: <App /> },
-  { path: "/checkout", element: <CheckoutForm /> },
-]);
-
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <CartProvider>
-    <RouterProvider router={router} />
-  </CartProvider>
-);
-
-
-
-
-// main.jsx
-import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home";
-import ProductDetail from "./pages/ProductDetail";
-import { CartProvider } from "./context/CartContext";
-import Layout from "./Layout";
-import "./index.css"; // don't forget this one either, from Day 5
-import CheckoutForm from "./components/CheckoutForm";
-
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      { path: "/", element: <Home /> },
-      { path: "/product/:id", element: <ProductDetail/> },
-      { path: "/cart", element: <CheckoutForm /> },
-      { path: "/login", element: <Login /> },
-      { path: "/register", element: <Register /> },
-    ],
-  },
-]);
-
-import { AuthProvider } from './context/AuthContext';
-
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <AuthProvider>
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
-  </AuthProvider>
-);*/
-
-
+import { WishlistProvider } from "./context/WishlistContext";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
@@ -68,6 +12,13 @@ import CheckoutForm from "./components/CheckoutForm";
 import "./index.css";
 import AdminAddProduct from './pages/AdminAddProduct';
 import OrderSuccess from "./pages/OrderSuccess";
+import Wishlist from "./pages/Wishlist";
+import Support from "./pages/Support";
+import AdminEditProduct from "./pages/AdminEditProduct";
+import BlogPost from "./pages/BlogPost";
+import AdminAddPost from "./pages/AdminAddPost";
+import AdminEditPost from "./pages/AdminEditPost";
+
 
 const router = createBrowserRouter([
   {
@@ -80,6 +31,12 @@ const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "/admin/add-product", element: <AdminAddProduct /> },
       { path: "/order-success", element: <OrderSuccess /> },
+      { path: "/wishlist", element: <Wishlist /> },
+      { path: "/support", element: <Support /> },
+      { path: "/admin/edit-product/:id", element: <AdminEditProduct /> },
+      { path: "/blog/:id", element: <BlogPost /> },
+      { path: "/admin/add-post", element: <AdminAddPost /> },
+      { path: "/admin/edit-post/:id", element: <AdminEditPost /> },
     ],
   },
 ]);
@@ -87,7 +44,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <CartProvider>
-      <RouterProvider router={router} />
+      <WishlistProvider>
+        <RouterProvider router={router} />
+      </WishlistProvider>
     </CartProvider>
   </AuthProvider>
 );

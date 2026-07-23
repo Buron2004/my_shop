@@ -61,6 +61,58 @@ export async function payForOrder(orderId) {
   return data;
 }
 
+export async function updateMyProduct(id, updates) {
+  const res = await fetch(`${BASE_URL}/products/${id}`, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  return res.json();
+}
+
+export async function getPosts() {
+  const res = await fetch(`${BASE_URL}/posts`);
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  return res.json();
+}
+
+export async function getPostById(id) {
+  const res = await fetch(`${BASE_URL}/posts/${id}`);
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  return res.json();
+}
+
+export async function createPost(post) {
+  const res = await fetch(`${BASE_URL}/posts`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify(post),
+  });
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  return res.json();
+}
+
+export async function deletePost(id) {
+  const res = await fetch(`${BASE_URL}/posts/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  return res.json();
+}
+
+export async function updatePost(id, updates) {
+  const res = await fetch(`${BASE_URL}/posts/${id}`, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  return res.json();
+}
+
+
 // --- Auth ---
 
 export async function registerUser({ name, email, password }) {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import BackButton from "../components/BackButton";
@@ -63,13 +63,18 @@ function ProductDetail() {
       </button>
 
       {isLoggedIn && user.role === "admin" && (
-        <button
-          onClick={handleDelete}
-          disabled={deleting}
-          className="mt-3 block text-sm text-red-600 hover:underline disabled:opacity-50"
+        <div className="mt-3 flex gap-4">
+         <Link to={`/admin/edit-product/${id}`} className="text-sm text-blue-600 hover:underline">
+           Edit this product
+         </Link>
+         <button
+           onClick={handleDelete}
+           disabled={deleting}
+           className="text-sm text-red-600 hover:underline disabled:opacity-50"
         >
           {deleting ? "Deleting..." : "Delete this product"}
         </button>
+        </div>
       )}
     </div>
   );

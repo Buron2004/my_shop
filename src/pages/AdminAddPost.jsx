@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createPost } from '../api/myBackendApi';
+import { createPost, uploadImage } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
 
 function AdminAddPost() {
   const [title, setTitle] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { user, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const [featured, setFeatured] = useState(false);
 
   if (!isLoggedIn || user.role !== 'admin') {
     return (
@@ -21,12 +23,24 @@ function AdminAddPost() {
     );
   }
 
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const newPost = await createPost({ title, excerpt, content, image });
+      let imageUrl = '';
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
+      const newPost = await createPost({ title, excerpt, content, image: imageUrl, featured });
       navigate(`/blog/${newPost._id}`);
     } catch (err) {
       setError(err.message);
@@ -45,12 +59,20 @@ function AdminAddPost() {
           placeholder="Post title"
           className="border p-2 w-full"
         />
-        <input
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          placeholder="Image URL"
-          className="border p-2 w-full"
-        />
+
+        <div>
+          <label className="block text-sm text-gray-600 mb-1">Post image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="border p-2 w-full text-sm"
+          />
+          {imagePreview && (
+            <img src={imagePreview} alt="Preview" className="mt-2 h-32 object-contain" />
+          )}
+        </div>
+
         <textarea
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
@@ -65,6 +87,14 @@ function AdminAddPost() {
           rows={8}
           className="border p-2 w-full"
         />
+        <label className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={featured}
+            onChange={(e) => setFeatured(e.target.checked)}
+          />
+          Mark as Featured Post
+        </label>
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <button
           type="submit"

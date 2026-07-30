@@ -33,7 +33,7 @@ function PromoCarousel({ products }) {
 
   return (
     <div className={`relative ${bg} transition-colors duration-500 overflow-hidden`}>
-      <div className="max-w-7xl mx-auto px-6 flex items-center min-h-[380px]">
+      <div className="max-w-7xl mx-auto px-6 flex items-center min-h-[300px] md:min-h-[380px]">
         <div className="w-full md:w-1/2 text-white py-14 z-10 text-center flex flex-col items-center">
           <p className="text-xs font-semibold tracking-widest mb-4 uppercase">Summer 2026</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
@@ -66,14 +66,14 @@ function PromoCarousel({ products }) {
         className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/20 hover:bg-black/35 text-white flex items-center justify-center z-20 transition"
         aria-label="Previous"
       >
-        <span className="text-7xl font-light leading-none -translate-x-px">‹</span>
+        <span className="text-2xl font-light leading-none">‹</span>
       </button>
       <button
         onClick={next}
         className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/20 hover:bg-black/35 text-white flex items-center justify-center z-20 transition"
         aria-label="Next"
       >
-        <span className="text-7xl font-light leading-none translate-x-px">›</span>
+        <span className="text-2xl font-light leading-none">›</span>
       </button>
 
       <div className="absolute bottom-6 left-6 flex gap-1.5 z-20">

@@ -9,6 +9,24 @@ function authHeaders() {
   };
 }
 
+export async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${BASE_URL}/upload`, {
+    method: 'POST',
+    headers: {
+      ...(token && { Authorization: `Bearer ${token}` }),
+      // no Content-Type here — the browser sets it automatically for FormData
+    },
+    body: formData,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Image upload failed');
+  return data.url;
+}
+
 export async function getMyProducts() {
   const res = await fetch(`${BASE_URL}/products`);
   if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
@@ -24,7 +42,7 @@ export async function getMyProductById(id) {
 export async function createMyProduct(product) {
   const res = await fetch(`${BASE_URL}/products`, {
     method: 'POST',
-    headers: authHeaders(), // now includes the token if logged in
+    headers: authHeaders(),
     body: JSON.stringify(product),
   });
   if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
@@ -116,23 +134,92 @@ export async function updatePost(id, updates) {
 // --- Auth ---
 
 export async function registerUser({ name, email, password }) {
-  const res = await fetch(`${BASE_URL}/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, password }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Registration failed');
-  return data; // { token, user }
+  try {
+    const res = await fetch(`${BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Registration failed');
+    return data;
+  } catch (err) {
+    if (err.message === 'Failed to fetch') {
+      throw new Error('Unable to reach the server. Please check your connection and try again.');
+    }
+    throw err;
+  }
 }
 
 export async function loginUser({ email, password }) {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
+  try {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    return data;
+  } catch (err) {
+    if (err.message === 'Failed to fetch') {
+      throw new Error('Unable to reach the server. Please check your connection and try again.');
+    }
+    throw err;
+  }
+}
+
+export async function verifyOtp({ email, otp }) {
+  const res = await fetch(`${BASE_URL}/auth/verify-otp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, otp }),
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Login failed');
+  if (!res.ok) throw new Error(data.error || 'Verification failed');
   return data; // { token, user }
+}
+
+export async function resendOtp({ email }) {
+  const res = await fetch(`${BASE_URL}/auth/resend-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to resend code');
+  return data;
+}
+
+export async function requestPasswordReset({ email }) {
+  const res = await fetch(`${BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to send reset link');
+  return data;
+}
+
+export async function resetPassword({ email, token, newPassword }) {
+  const res = await fetch(`${BASE_URL}/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, token, newPassword }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to reset password');
+  return data;
+}
+
+export async function googleLogin(credential) {
+  const res = await fetch(`${BASE_URL}/auth/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ credential }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
+  return data;
 }

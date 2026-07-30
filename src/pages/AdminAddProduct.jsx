@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createMyProduct } from '../api/myBackendApi';
+import { createMyProduct, uploadImage } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
 
 const CATEGORIES = ['Men', 'Women', 'Kids', 'Accessories'];
@@ -8,7 +8,8 @@ const CATEGORIES = ['Men', 'Women', 'Kids', 'Accessories'];
 function AdminAddProduct() {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
-  const [image, setImage] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [description, setDescription] = useState('');
   const [featured, setFeatured] = useState(false);
@@ -25,15 +26,27 @@ function AdminAddProduct() {
     );
   }
 
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
+      let imageUrl = '';
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
       const newProduct = await createMyProduct({
         title,
         price: Number(price),
-        image,
+        image: imageUrl,
         category,
         description,
         featured,
@@ -64,12 +77,20 @@ function AdminAddProduct() {
           placeholder="Price"
           className="border p-2 w-full"
         />
-        <input
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          placeholder="Image URL"
-          className="border p-2 w-full"
-        />
+
+        <div>
+          <label className="block text-sm text-gray-600 mb-1">Product image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="border p-2 w-full text-sm"
+          />
+          {imagePreview && (
+            <img src={imagePreview} alt="Preview" className="mt-2 h-32 object-contain" />
+          )}
+        </div>
+
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -100,7 +121,7 @@ function AdminAddProduct() {
           disabled={loading}
           className="bg-black text-white w-full py-2 rounded disabled:opacity-50"
         >
-          {loading ? 'Adding...' : 'Add Product'}
+          {loading ? 'Uploading & Adding...' : 'Add Product'}
         </button>
       </form>
     </div>

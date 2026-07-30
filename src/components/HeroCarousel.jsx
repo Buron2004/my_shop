@@ -61,7 +61,7 @@ function HeroCarousel() {
 
   return (
     <div className={`relative ${slide.bg} transition-colors duration-500 overflow-hidden`}>
-      <div className="max-w-7xl mx-auto px-6 flex items-center min-h-[460px]">
+      <div className="max-w-7xl mx-auto px-6 flex items-center min-h-[300px] md:min-h-[460px]">
         <div className="w-full md:w-1/2 text-white py-16 z-10 text-center flex flex-col items-center">
           <p className="text-xs font-semibold tracking-widest mb-4 uppercase">{slide.tag}</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{slide.title}</h1>

@@ -37,7 +37,8 @@ function Home() {
     async function loadPosts() {
       try {
         const data = await getPosts();
-        setPosts(data.slice(0, 3));
+        const featuredPosts = data.filter((p) => p.featured);
+        setPosts(featuredPosts.slice(0, 3));
       } catch (err) {
         console.error("Failed to load posts:", err.message);
       }

@@ -18,6 +18,11 @@ import AdminEditProduct from "./pages/AdminEditProduct";
 import BlogPost from "./pages/BlogPost";
 import AdminAddPost from "./pages/AdminAddPost";
 import AdminEditPost from "./pages/AdminEditPost";
+import Blog from "./pages/Blog";
+import VerifyOtp from "./pages/VerifyOtp";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 
 const router = createBrowserRouter([
@@ -37,16 +42,22 @@ const router = createBrowserRouter([
       { path: "/blog/:id", element: <BlogPost /> },
       { path: "/admin/add-post", element: <AdminAddPost /> },
       { path: "/admin/edit-post/:id", element: <AdminEditPost /> },
+      { path: "/blog", element: <Blog /> },
+      { path: "/verify-otp", element: <VerifyOtp /> },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      { path: "/reset-password", element: <ResetPassword /> },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <AuthProvider>
-    <CartProvider>
-      <WishlistProvider>
-        <RouterProvider router={router} />
-      </WishlistProvider>
-    </CartProvider>
-  </AuthProvider>
+  <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <AuthProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <RouterProvider router={router} />
+        </WishlistProvider>
+      </CartProvider>
+    </AuthProvider>
+  </GoogleOAuthProvider>
 );

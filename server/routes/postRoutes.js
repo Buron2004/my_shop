@@ -28,11 +28,11 @@ router.get('/:id', async (req, res) => {
 // POST — create a new post (admin only)
 router.post('/', requireAuth, requireAdmin, async (req, res) => {
   try {
-    const { title, excerpt, content, image } = req.body;
+    const { title, excerpt, content, image, featured } = req.body;
     if (!title || !excerpt || !content) {
       return res.status(400).json({ error: 'title, excerpt, and content are required' });
     }
-    const newPost = await Post.create({ title, excerpt, content, image, author: req.userId });
+    const newPost = await Post.create({ title, excerpt, content, image, author: req.userId, featured });
     res.status(201).json(newPost);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -42,10 +42,10 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
 // PUT — update an existing post (admin only)
 router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
   try {
-    const { title, excerpt, content, image } = req.body;
+    const { title, excerpt, content, image, featured } = req.body;
     const updated = await Post.findByIdAndUpdate(
       req.params.id,
-      { title, excerpt, content, image },
+      { title, excerpt, content, image, featured },
       { new: true, runValidators: true }
     );
     if (!updated) return res.status(404).json({ error: 'Post not found' });

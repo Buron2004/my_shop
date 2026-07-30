@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getMyProductById, updateMyProduct } from '../api/myBackendApi';
+import { getMyProductById, updateMyProduct, uploadImage } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
 
 const CATEGORIES = ['Men', 'Women', 'Kids', 'Accessories'];
@@ -12,7 +12,9 @@ function AdminEditProduct() {
 
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
-  const [image, setImage] = useState('');
+  const [currentImage, setCurrentImage] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [description, setDescription] = useState('');
   const [featured, setFeatured] = useState(false);
@@ -26,7 +28,7 @@ function AdminEditProduct() {
         const data = await getMyProductById(id);
         setTitle(data.title);
         setPrice(data.price);
-        setImage(data.image || '');
+        setCurrentImage(data.image || '');
         setCategory(data.category || CATEGORIES[0]);
         setDescription(data.description || '');
         setFeatured(data.featured || false);
@@ -49,15 +51,27 @@ function AdminEditProduct() {
 
   if (loading) return <p className="p-6">Loading product...</p>;
 
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setSaving(true);
     try {
+      let imageUrl = currentImage; // keep the existing image unless a new one is uploaded
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
       await updateMyProduct(id, {
         title,
         price: Number(price),
-        image,
+        image: imageUrl,
         category,
         description,
         featured,
@@ -88,12 +102,23 @@ function AdminEditProduct() {
           placeholder="Price"
           className="border p-2 w-full"
         />
-        <input
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          placeholder="Image URL"
-          className="border p-2 w-full"
-        />
+
+        <div>
+          <label className="block text-sm text-gray-600 mb-1">Product image</label>
+          {currentImage && !imagePreview && (
+            <img src={currentImage} alt="Current" className="mb-2 h-32 object-contain" />
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="border p-2 w-full text-sm"
+          />
+          {imagePreview && (
+            <img src={imagePreview} alt="New preview" className="mt-2 h-32 object-contain" />
+          )}
+        </div>
+
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}

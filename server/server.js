@@ -21,11 +21,13 @@ const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const postRoutes = require('./routes/postRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is running');

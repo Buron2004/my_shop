@@ -9,7 +9,7 @@ function ProductCard({ product }) {
   const wishlisted = isWishlisted(product._id);
 
   return (
-    <div className="group relative bg-white rounded-lg overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+    <div className="group relative bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <button
         onClick={() => toggleWishlist(product)}
         className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:scale-110 transition"

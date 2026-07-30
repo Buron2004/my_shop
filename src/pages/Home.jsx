@@ -97,7 +97,7 @@ function Home() {
             <h2 className="text-2xl font-bold text-gray-900">BESTSELLER PRODUCTS</h2>
             <p className="text-sm text-gray-400 mt-1">Problems trying to resolve the conflict between</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 px-12 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
             {featuredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

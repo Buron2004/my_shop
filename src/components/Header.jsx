@@ -31,7 +31,7 @@ function Header() {
   }
 
   return (
-    <header className="w-full">
+    <header className="w-full border-4 border-red-900">
       {/* Top contact bar */}
       <div className="bg-gray-900 text-gray-300 text-xs">
         <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">

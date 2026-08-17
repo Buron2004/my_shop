@@ -23,6 +23,14 @@ import VerifyOtp from "./pages/VerifyOtp";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AdminLayout from "./layouts/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import CustomerDashboard from "./pages/CustomerDashboard";
+import CustomerProfile from "./pages/CustomerProfile";
 
 
 const router = createBrowserRouter([
@@ -46,6 +54,17 @@ const router = createBrowserRouter([
       { path: "/verify-otp", element: <VerifyOtp /> },
       { path: "/forgot-password", element: <ForgotPassword /> },
       { path: "/reset-password", element: <ResetPassword /> },
+      { path: "/my-orders", element: <CustomerDashboard /> },
+      { path: "/profile", element: <CustomerProfile /> },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "orders", element: <AdminOrders /> },
+      { path: "analytics", element: <AdminAnalytics /> },
     ],
   },
 ]);
@@ -56,6 +75,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <CartProvider>
         <WishlistProvider>
           <RouterProvider router={router} />
+          <ToastContainer position="top-right" autoClose={2500} />
         </WishlistProvider>
       </CartProvider>
     </AuthProvider>

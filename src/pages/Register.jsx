@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
+import { toast } from 'react-toastify';
 import { registerUser, googleLogin } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
 import FormError from '../components/FormError';
@@ -35,6 +36,7 @@ function Register() {
     setLoading(true);
     try {
       const data = await registerUser({ name, email, password });
+      toast.success('Account created! Check your email for a verification code.');
       navigate(`/verify-otp?email=${encodeURIComponent(data.email)}`);
     } catch (err) {
       setError(err.message);

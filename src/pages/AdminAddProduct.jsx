@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createMyProduct, uploadImage } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
+import Button from '../components/Button';
 
 const CATEGORIES = ['Men', 'Women', 'Kids', 'Accessories'];
 
@@ -116,13 +117,9 @@ function AdminAddProduct() {
           Mark as Featured Product
         </label>
         {error && <p className="text-red-600 text-sm">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-black text-white w-full py-2 rounded disabled:opacity-50"
-        >
+        <Button variant="primary" type="submit" disabled={loading}>
           {loading ? 'Uploading & Adding...' : 'Add Product'}
-        </button>
+        </Button>
       </form>
     </div>
   );

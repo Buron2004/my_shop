@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import { Heart } from 'lucide-react';
+import Button from './Button';
 
 function ProductCard({ product }) {
   const { addToCart } = useContext(CartContext);
@@ -15,7 +17,11 @@ function ProductCard({ product }) {
         className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:scale-110 transition"
         aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
-        <span className="text-base">{wishlisted ? "❤️" : "🤍"}</span>
+        <Heart
+          size={16}
+          className={wishlisted ? "text-red-500" : "text-gray-400"}
+          fill={wishlisted ? "currentColor" : "none"}
+        />
       </button>
 
       <Link to={`/product/${product._id}`} className="block">
@@ -40,12 +46,9 @@ function ProductCard({ product }) {
       </Link>
 
       <div className="px-4 pb-4">
-        <button
-          onClick={() => addToCart(product)}
-          className="w-full bg-gray-900 text-white text-sm font-medium py-2 rounded hover:bg-green-700 transition-colors"
-        >
+        <Button variant="primary" size="sm" onClick={() => addToCart(product)} className="w-full">
           Add to Cart
-        </button>
+        </Button>
       </div>
     </div>
   );

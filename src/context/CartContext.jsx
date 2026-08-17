@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 
 export const CartContext = createContext();
 
@@ -16,33 +17,34 @@ export function CartProvider({ children }) {
     setCartItems((prev) => {
       const existing = prev.find((item) => item._id === product._id);
       if (existing) {
-        // already in cart — bump the quantity instead of adding a duplicate row
         return prev.map((item) =>
           item._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      // not in cart yet — add it with quantity 1
       return [...prev, { ...product, quantity: 1 }];
     });
+    toast.success(`${product.title} added to cart`);
   };
 
   const removeFromCart = (id) => {
     setCartItems((prev) => prev.filter((item) => item._id !== id));
+    toast.info('Item removed from cart');
   };
 
   const updateQuantity = (id, quantity) => {
-    if (quantity < 1) return; // never let quantity drop below 1 here — use removeFromCart for that
+    if (quantity < 1) return;
     setCartItems((prev) =>
       prev.map((item) => (item._id === id ? { ...item, quantity } : item))
     );
   };
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const clearCart = () => {
     setCartItems([]);
-   };
+  };
+
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider

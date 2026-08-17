@@ -2,11 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
-
+const adminRoutes = require('./routes/adminRoutes');
 const app = express();
+const userRoutes = require('./routes/userRoutes');
+
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/admin', adminRoutes);
+app.use('/api/users', userRoutes);
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`);

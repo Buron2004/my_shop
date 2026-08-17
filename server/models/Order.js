@@ -1,4 +1,3 @@
-// server/models/Order.js
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
@@ -16,12 +15,20 @@ const orderSchema = new mongoose.Schema({
     },
   ],
   total: { type: Number, required: true },
+  shippingCost: { type: Number, default: 0 },
+  discount: { type: Number, default: 0 },
   shippingAddress: { type: String, required: true },
   status: {
     type: String,
-    enum: ['pending', 'paid', 'shipped', 'delivered'],
+    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'],
     default: 'pending',
   },
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'paid', 'failed', 'refunded'],
+    default: 'pending',
+  },
+  paystackReference: { type: String },
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);

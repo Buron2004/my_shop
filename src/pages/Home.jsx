@@ -46,8 +46,23 @@ function Home() {
     loadPosts();
   }, []);
 
-  if (loading) return <p className="p-6">Loading products...</p>;
-  if (error) return <p className="p-6 text-red-600">Something went wrong: {error}</p>;
+  if (error) return <ErrorState message={error} onRetry={() => window.location.reload()} />;
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-lg border overflow-hidden">
+            <div className="aspect-square bg-gray-100 animate-pulse" />
+            <div className="p-4 space-y-2">
+              <div className="h-3 bg-gray-200 rounded w-1/3 animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   function handleCategoryClick(cat) {
     const params = {};
@@ -78,11 +93,10 @@ function Home() {
             <button
               key={cat}
               onClick={() => handleCategoryClick(cat)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
-                activeCategory === cat
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${activeCategory === cat
                   ? "bg-green-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
+                }`}
             >
               {cat}
             </button>
@@ -121,7 +135,7 @@ function Home() {
         )}
 
         {filteredProducts.length === 0 ? (
-          <p className="text-gray-500 py-12 text-center">No products found.</p>
+          <EmptyState title="No products found" message="Try a different search or category" />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (

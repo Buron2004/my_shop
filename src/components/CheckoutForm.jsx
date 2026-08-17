@@ -1,23 +1,25 @@
-
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { CartContext } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { createOrder, payForOrder } from "../api/myBackendApi";
-import BackButton from "../components/BackButton";
+import { createOrder, verifyPayment } from "../api/myBackendApi";
+import PaystackButton from "../components/PaystackButton";
+import Button from './Button';
 
 function CheckoutForm() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | placing | paying
+  const [placedOrder, setPlacedOrder] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { cartItems, cartCount, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  async function handleSubmit(e) {
+  async function handlePlaceOrder(e) {
     e.preventDefault();
     setError("");
 
@@ -30,8 +32,8 @@ function CheckoutForm() {
       return;
     }
 
+    setLoading(true);
     try {
-      setStatus("placing");
       const orderItems = cartItems.map((item) => ({
         product: item._id,
         title: item.title,
@@ -39,23 +41,28 @@ function CheckoutForm() {
         quantity: item.quantity,
       }));
       const order = await createOrder({ items: orderItems, total, shippingAddress: address });
-
-      setStatus("paying");
-      await payForOrder(order._id);
-
-      clearCart();
-      navigate("/order-success");
+      setPlacedOrder(order);
     } catch (err) {
       setError(err.message);
     } finally {
-      setStatus("idle");
+      setLoading(false);
     }
   }
 
-  const buttonLabel =
-    status === "placing" ? "Placing order..." :
-    status === "paying" ? "Processing payment..." :
-    "Place Order & Pay";
+  async function handlePaymentSuccess(response) {
+    try {
+      await verifyPayment(placedOrder._id, response.reference);
+      clearCart();
+      toast.success('Payment successful!');
+      navigate('/order-success');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
+
+  function handlePaymentClose() {
+    toast.info('Payment window closed');
+  }
 
   return (
     <div className="p-6">
@@ -102,28 +109,38 @@ function CheckoutForm() {
         <p className="font-semibold mb-4">Total: ${total.toFixed(2)}</p>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Your Name"
-          className="border p-2 w-full"
-        />
-        <input
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Your Address"
-          className="border p-2 w-full"
-        />
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-        <button
-          type="submit"
-          disabled={status !== "idle"}
-          className="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          {buttonLabel}
-        </button>
-      </form>
+      {!placedOrder ? (
+        <form onSubmit={handlePlaceOrder} className="space-y-4">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your Name"
+            className="border p-2 w-full"
+          />
+          <input
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Your Address"
+            className="border p-2 w-full"
+          />
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? "Placing order..." : "Continue to Payment"}
+          </Button>
+        </form>
+      ) : (
+        <div className="mt-4">
+          <p className="text-sm text-gray-600 mb-3">
+            Order created. Complete payment to confirm your order.
+          </p>
+          <PaystackButton
+            amount={placedOrder.total}
+            orderId={placedOrder._id}
+            onSuccess={handlePaymentSuccess}
+            onClose={handlePaymentClose}
+          />
+        </div>
+      )}
     </div>
   );
 }

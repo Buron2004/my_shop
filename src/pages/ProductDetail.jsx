@@ -4,6 +4,7 @@ import { CartContext } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import BackButton from "../components/BackButton";
 import { getMyProductById, deleteMyProduct } from "../api/myBackendApi";
+import Button from '../components/Button';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -55,25 +56,20 @@ function ProductDetail() {
       {product.description && (
         <p className="text-sm text-gray-500 mb-4">{product.description}</p>
       )}
-      <button
-        onClick={() => addToCart(product)}
-        className="bg-black text-white rounded px-4 py-2 text-sm hover:bg-gray-800"
-      >
+      <Button variant="primary" size="sm" onClick={() => addToCart(product)} className="w-1/2">
         Add to Cart
-      </button>
+      </Button>
 
       {isLoggedIn && user.role === "admin" && (
         <div className="mt-3 flex gap-4">
-         <Link to={`/admin/edit-product/${id}`} className="text-sm text-blue-600 hover:underline">
-           Edit this product
-         </Link>
-         <button
-           onClick={handleDelete}
-           disabled={deleting}
-           className="text-sm text-red-600 hover:underline disabled:opacity-50"
-        >
-          {deleting ? "Deleting..." : "Delete this product"}
-        </button>
+          <Button variant="ghost" size="sm">
+            <Link to={`/admin/edit-product/${id}`} className="text-sm text-blue-600 hover:underline">
+              Edit this product
+            </Link>
+          </Button>
+          <Button variant="danger" size="sm" onClick={handleDelete} disabled={deleting}>
+            {deleting ? "Deleting..." : "Delete this product"}
+          </Button>
         </div>
       )}
     </div>

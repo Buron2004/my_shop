@@ -3,6 +3,9 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getPostById, deletePost } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
 import BackButton from '../components/BackButton';
+import Button from '../components/Button';
+
+
 
 function BlogPost() {
   const { id } = useParams();
@@ -58,16 +61,15 @@ function BlogPost() {
 
       {isLoggedIn && user.role === "admin" && (
         <div className="mt-6 pt-6 border-t flex gap-4">
-          <Link to={`/admin/edit-post/${id}`} className="text-sm text-blue-600 hover:underline">
-            Edit this post
-          </Link>
-          <button
-            onClick={handleDelete}
-            disabled={deleting}
-            className="text-sm text-red-600 hover:underline disabled:opacity-50"
-          >
+          <Button variant="ghost" size="sm">
+            <Link to={`/admin/edit-post/${id}`} className="text-sm text-blue-600 hover:underline">
+              Edit this post
+            </Link>
+          </Button>
+          
+          <Button variant="danger" size="sm" onClick={handleDelete} disabled={deleting}>
             {deleting ? "Deleting..." : "Delete this post"}
-          </button>
+          </Button>
         </div>
       )}
     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMyProductById, updateMyProduct, uploadImage } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
+import Button from '../components/Button';
 
 const CATEGORIES = ['Men', 'Women', 'Kids', 'Accessories'];
 
@@ -144,13 +145,9 @@ function AdminEditProduct() {
           Mark as Featured Product
         </label>
         {error && <p className="text-red-600 text-sm">{error}</p>}
-        <button
-          type="submit"
-          disabled={saving}
-          className="bg-black text-white w-full py-2 rounded disabled:opacity-50"
-        >
+        <Button variant="primary" type="submit" disabled={saving}>
           {saving ? 'Saving...' : 'Save Changes'}
-        </button>
+        </Button>
       </form>
     </div>
   );

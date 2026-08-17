@@ -1,22 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
-function BackButton({ fallback = "/" }) {
+function BackButton() {
   const navigate = useNavigate();
-
-  function handleBack() {
-    if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1);
-    } else {
-      navigate(fallback);
-    }
-  }
 
   return (
     <button
-      onClick={handleBack}
+      onClick={() => navigate(-1)}
       className="flex items-center gap-1 text-sm text-gray-600 hover:text-black mb-4"
     >
-      ← Back
+      <ArrowLeft size={14} /> Back
     </button>
   );
 }

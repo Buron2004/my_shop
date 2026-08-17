@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPost, uploadImage } from '../api/myBackendApi';
 import { useAuth } from '../context/AuthContext';
+import Button from '../components/Button';
 
 function AdminAddPost() {
   const [title, setTitle] = useState('');
@@ -96,13 +97,9 @@ function AdminAddPost() {
           Mark as Featured Post
         </label>
         {error && <p className="text-red-600 text-sm">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-black text-white w-full py-2 rounded disabled:opacity-50"
-        >
+        <Button variant="primary" type="submit" disabled={loading}>
           {loading ? 'Publishing...' : 'Publish Post'}
-        </button>
+        </Button>
       </form>
     </div>
   );

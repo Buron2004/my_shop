@@ -6,6 +6,8 @@ import { getMyProducts, getPosts } from "../api/myBackendApi";
 import EditorsPick from "../components/EditorsPick";
 import PromoCarousel from "../components/PromoCarousel";
 import NeuralUniverseBanner from "../components/NeuralUniverseBanner";
+import EmptyState from "../components/EmptyState";
+import ErrorState from "../components/ErrorState";
 
 const CATEGORIES = ["All", "Men", "Women", "Kids", "Accessories"];
 
@@ -77,9 +79,17 @@ function Home() {
       p.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
+
+  
+  
+
   if (activeCategory !== "All") {
-    filteredProducts = filteredProducts.filter((p) => p.category === activeCategory);
-  }
+  filteredProducts = filteredProducts.filter(
+    (p) =>
+      String(p.category || "").trim().toLowerCase() ===
+      activeCategory.trim().toLowerCase()
+  );
+}
 
   return (
     <div>
@@ -94,8 +104,8 @@ function Home() {
               key={cat}
               onClick={() => handleCategoryClick(cat)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${activeCategory === cat
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-green-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
             >
               {cat}
@@ -127,7 +137,7 @@ function Home() {
           </p>
         )}
 
-        {!searchTerm && featuredProducts.length > 0 && (
+        {!searchTerm && activeCategory === "All" && featuredProducts.length > 0 && (
           <>
             <PromoCarousel products={featuredProducts} />
             <NeuralUniverseBanner />
